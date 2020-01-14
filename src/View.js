@@ -3,9 +3,9 @@ class View {
         this._root = document.getElementById('root');
         this.init();
         this._model = model;
-        this._model.subscribe(this.appendLi);
+        this._model.subscribe(this.taskListRender);
 
-        this.appendLi();
+        this.taskListRender();
     }
 
     init = () => {
@@ -24,8 +24,7 @@ class View {
         inputText.setAttribute('value', '');
         inputText.setAttribute('id', 'add');
         inputText.setAttribute('placeholder', 'What needs to be done?');
-        inputText.addEventListener('keyup', this.textAdd);
-
+        inputText.addEventListener('keyup', this.taskAdd);
         header.append(inputText);
 
         const body = document.createElement('main');
@@ -38,7 +37,7 @@ class View {
         this._root.append(wrapper);
     };
 
-    appendLi = () => {
+    taskListRender = () => {
         list.innerHTML = '';
 
         const arr = this._model.getState();
@@ -49,6 +48,7 @@ class View {
             const input = document.createElement('input');
             const label = document.createElement('label');
             const button = document.createElement('button');
+
             input.setAttribute('type', 'checkbox');
             input.addEventListener('click', this.completeTask);
             item.completed && input.setAttribute('checked', 'checked');
@@ -56,6 +56,7 @@ class View {
             button.setAttribute('id', item.id);
             button.setAttribute('class', 'destroy');
             button.addEventListener('click', this.destroyTask);
+
             li.append(div);
             div.append(input);
             div.append(label);
@@ -64,7 +65,7 @@ class View {
         });
     };
 
-    textAdd = e => {
+    taskAdd = e => {
         if (e.keyCode === 13 && e.target.value) {
             e.preventDefault();
             this._model.dispatch({
